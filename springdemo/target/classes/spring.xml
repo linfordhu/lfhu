@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    xmlns 即 xml namespace xml 使用的命名空间
+    xmlns:xsi 即 xml schema instance xml 遵守的具体规范
+    xsi:schemaLocation 本文档 xml 遵守的规范 官方指定
+    -->
+    <bean id="helloService" class="com.hlf.spring.demo.service.HelloService"></bean>
+</beans>
