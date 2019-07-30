@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- scan：配置文件发生改变，将会重新加载，默认为true；
+    scanPeriod：检测配置文件修改的时间间隔，如果没有给出时间单位，默认为毫秒，当scan=true时这个值生效，默认时间间隔为1分钟；
+    debug：设置为true时，将打印出logback内部日志信息，实时查看logback运行信息，默认为false -->
+<configuration scan="true" scanPeriod="60000" debug="false">
+    <!-- logger：用来设置某个包或者具体某一个类的日记打印级别、以及指定<appender>。可以包含零个或者多个<appender-ref>元素，标识这个appender将会添加到这个logger。
+         <logger>仅有一个name属性、一个可选的level属性和一个可选的additivity属性：
+         name：用来指定受此logger约束的某一个包或者具体的某一个类
+         level：用来设置打印级别，五个常用打印级别从低至高依次为TRACE、DEBUG、INFO、WARN、ERROR，如果未设置此级别，那么当前logger会继承上级的级别
+         additivity：是否向上级logger传递打印信息，默认为true-->
+    <logger name="com.demo.service.NeoTestServiceImpl" level="DEBUG" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <!-- <root>也是<logger>元素，但是它是根logger，只有一个level属性，因为它的name就是ROOT。 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <!-- <appender>是<configuration>的子节点，是负责写日志的组件。<appender>有两个必要属性name和class：
+       name：指定<appender>的名称
+       class：指定<appender>的全限定名
+       下面演示的是ConsoleAppender，ConsoleAppender的作用是将日志输出到控制台。 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- <encoder>表示对参数进行格式化 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} 耗时：%r 日志来自：%logger{50} 日志类型: %-5p 日志内容：%m%n</pattern>
+        </encoder>
+    </appender>
+    <!-- FileAppender的作用是将日记写到文件中，节点为：
+       <file>表示写入的文件名，可以使相对目录也可以是绝对目录，如果上级目录不存在则自动创建
+       <appender>如果为true表示日志被追加到文件结尾，如果是false表示清空文件
+       <encoder>表示输出格式
+       <prudent>如果为true表示日志会被安全地写入文件，即使其他的FileAppender也在向此文件做写入操作，效率低，默认为false-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/Users/hulingfeng/Desktop/developsoft/test.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- RollingFileAppender的作用是滚动记录文件，先将日志记录到指定文件，当符合某个条件时再将日志记录到其他文件。-->
+    <appender name="ROLLING-FILE-1" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>rolling-file-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 异步输出 -->
+    <appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref ="ROLLING-FILE-1"/>
+    </appender>
+
+</configuration>
